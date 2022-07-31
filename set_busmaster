@@ -1,0 +1,44 @@
+#!/bin/bash
+#---------------------------------------------------------
+# busmaster - Turns on bus-master mode for a PCI endpoint
+#
+# From command line, run: busmaster [BDF of device]
+# If no BDF supplied, script will attempt to discover one
+#---------------------------------------------------------
+
+# Fetch the device BDF from the command line  
+device=$1
+
+# If the user didn't specify a device BDF, then try to
+# find one for vendor:device 10ee:903f
+if [ -z "$device" ]; then
+    line=$(lspci -d 10ee:903f)
+    if [ -z "$line" ]; then
+        echo "Error: no device specified or discovered"
+        exit 1
+    fi
+    tokens=($line)
+    device=${tokens[0]}
+fi
+
+# Ensure that this PCI device exists
+if [ -z "$(lspci -s $device)" ]; then
+    echo "PCI device $device not found"
+    exit 1
+fi
+
+# Find the current setting of the command register
+current=0x$(setpci -s $device COMMAND)
+
+# Turning on bit 2 enables BusMaster mode
+command_word_dec=$((current | 4))
+
+# Now convert that command word to hexadecimal
+command_word_hex=$(printf '%04X' ${command_word_dec})
+
+# And turn on BusMaster mode for this device
+sudo setpci -s $device COMMAND=${command_word_hex}
+
+# Tell the user that we succeeded
+echo "BusMaster mode enabled for $device"
+
