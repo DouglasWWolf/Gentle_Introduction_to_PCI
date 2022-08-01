@@ -1,10 +1,10 @@
 #!/bin/bash
-#---------------------------------------------------------
-# busmaster - Turns on bus-master mode for a PCI endpoint
+#-------------------------------------------------------------
+# set_busmaster - Turns on bus-master mode for a PCI endpoint
 #
 # From command line, run: busmaster [BDF of device]
 # If no BDF supplied, script will attempt to discover one
-#---------------------------------------------------------
+#-------------------------------------------------------------
 default_device=10ee:903f
 
 # Fetch the device BDF from the command line  
