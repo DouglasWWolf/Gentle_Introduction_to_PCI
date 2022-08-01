@@ -5,14 +5,15 @@
 # From command line, run: busmaster [BDF of device]
 # If no BDF supplied, script will attempt to discover one
 #---------------------------------------------------------
+default_device=10ee:903f
 
 # Fetch the device BDF from the command line  
 device=$1
 
 # If the user didn't specify a device BDF, then try to
-# find one for vendor:device 10ee:903f
+# find one for the default device
 if [ -z "$device" ]; then
-    line=$(lspci -d 10ee:903f)
+    line=$(lspci -d $default_device)
     if [ -z "$line" ]; then
         echo "Error: no device specified or discovered"
         exit 1
