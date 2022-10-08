@@ -64,3 +64,5 @@ fi
 echo "Enabling BusMaster mode on $device"
 setpci -s $device COMMAND=0106
 
+#echo "Enabling MSI interrupt capablities"
+#setpci -s $device 4a.w=1
